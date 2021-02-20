@@ -20,4 +20,46 @@
     <!--注册accountserviceImpl这个bean
     <bean id="accountService" class="com.ljf.spring.ssm.demo.service.impl.AccountServiceImpl"></bean>
 -->
+
+    <!--Spring整合MyBatis框架-->
+    <!--step2:加载jdbc连接信息 -->
+    <context:property-placeholder location="classpath:mybaits-jdbc.properties"></context:property-placeholder>
+    <!--step3：配置连接池-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--step4：配置SqlSessionFactory工厂-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <!--加载mybaits的核心配置文件 -->
+        <property name="configLocation" value="classpath:mybaitsConfig-spring.xml"></property>
+    </bean>
+
+    <!--step5：配置AccountDao接口对应的路径-->
+    <bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.ljf.spring.ssm.demo.mapper"/>
+    </bean>
+
+    <!--step6：配置Spring框架声明式事务管理-->
+    <!--配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!--配置事务通知-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="*" isolation="DEFAULT"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--配置AOP 织入增强-->
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.ljf.spring.ssm.demo.service.impl.*ServiceImpl.*(..))"/>
+    </aop:config>
 </beans>

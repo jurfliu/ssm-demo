@@ -7,6 +7,8 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +26,13 @@ import java.util.List;
  **/
 @Service  //相当于    <!--注册accountserviceImpl这个bean<bean id="accountService" class="com.ljf.spring.ssm.demo.service.impl.AccountServiceImpl"></bean>
 public class AccountServiceImpl implements AccountService {
-
+@Autowired
+private AccountMapper accountMapper;
     @Override
     public List<Account> findAll()  {
         List<Account> accountList=new ArrayList<>();
+        /**
+
         try {
             InputStream resourceAsStream = Resources.getResourceAsStream("mybaitsConfig.xml");
             SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(resourceAsStream);
@@ -40,11 +45,15 @@ public class AccountServiceImpl implements AccountService {
             e.printStackTrace();
         }
         return accountList;
+         **/
+        accountList =accountMapper.findAll();
+        return accountList;
     }
 
     @Override
     public void saveAccount(Account account) {
         List<Account> accountList=new ArrayList<>();
+        /**
         try {
             InputStream resourceAsStream = Resources.getResourceAsStream("mybaitsConfig.xml");
             SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(resourceAsStream);
@@ -57,5 +66,7 @@ public class AccountServiceImpl implements AccountService {
         catch (Exception e){
             e.printStackTrace();
         }
+         **/
+        accountMapper.saveAccount(account);
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--1. 起别名-->
+    <typeAliases>
+      <typeAlias type="com.ljf.spring.ssm.demo.bean.Account" alias="yonghu"></typeAlias>
+    </typeAliases>
+    <!-- 2.注册类型注册器
+    <typeHandlers>
+        <typeHandler handler="com.mybaits.demo.handler.DataTypeTransfer"></typeHandler>
+    </typeHandlers>
+    -->
+    <!--3.配置分页插件   -->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <property name="dialect" value="mysql"/>
+        </plugin>
+    </plugins>
+ <!-- 4.xxxmapper.xml都要在mybaits.config.xml文件中注册-->
+    <mappers>
+        <mapper resource="com/mybaits/mapper/AccountMapper.xml"></mapper>
+    </mappers>
+
+</configuration>
